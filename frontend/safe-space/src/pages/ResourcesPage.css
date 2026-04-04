@@ -1,0 +1,49 @@
+.filter-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.filter-row button {
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  padding: 10px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.filter-row button:hover {
+  background: #e2e8f0;
+}
+
+.resource-library {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.resource-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 18px;
+  border: 1px solid #e2e8f0;
+}
+
+.resource-icon {
+  font-size: 28px;
+  min-width: 36px;
+}
+
+.resource-item h3 {
+  margin-bottom: 6px;
+  color: #0f172a;
+}
+
+.resource-item p {
+  color: #64748b;
+}
