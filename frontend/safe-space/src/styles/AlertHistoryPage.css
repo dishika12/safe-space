@@ -1,0 +1,43 @@
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .history-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .history-filters select {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    background: white;
+  }
+  
+  .history-table-wrapper {
+    overflow-x: auto;
+    margin-top: 18px;
+  }
+  
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .history-table th,
+  .history-table td {
+    text-align: left;
+    padding: 14px 12px;
+    border-bottom: 1px solid #edf0f5;
+  }
+  
+  .history-table th {
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #6b7280;
+  }
