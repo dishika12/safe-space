@@ -34,3 +34,11 @@ Setup Instructions:
 Limitations: 
 1. Laptop microphones differ in sensitivity, directionality, and noise handling. Shelter environments have overlapping voices, echoes, and background noise that are not replicated.
 2. Training and testing data may not fully represent real distress signals across accents, languages, emotional intensity, or speaking styles.
+   
+
+Advantages of using this application:
+1. Runs Python natively
+2. Built-in WiFi : connects directly to staff dashboard network
+3. Always-on audio capture, ultra low power draw
+4. Discreet form factor : mounts on any wall in any room
+
