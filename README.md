@@ -2,7 +2,7 @@
 
 SafeSpace is an infrastructure for mental rest in women’s shelters. By using privacy-first, edge-based audio intelligence, it recognizes patterns like vocal tension and physical energy shifts. This provides a responsive environment where needs are heard without the social risk of speaking out. It reduces the weight of hyper-vigilance, allowing residents to move out of survival mode and reconnect with their own identity and wellbeing.
 
-##Tech Stack Used : 
+## Tech Stack Used : 
 1. Edge (Detection Device)
 2. Python
 3. openwakeword - wake word detection (hey jarvis)
@@ -15,11 +15,11 @@ SafeSpace is an infrastructure for mental rest in women’s shelters. By using p
 
    
 
-##Staff Server (Backend)
+## Staff Server (Backend)
 1. Python + Flask - web server and REST API endpoints (/register, /alert, /resolve)
 2. Flask-SocketIO - real-time WebSocket push to the browser dashboard
 
-##Setup Instructions:
+## Setup Instructions:
 1. Clone the repository.
 2. Run the staff dashboard:
 `cd staff`
@@ -32,13 +32,13 @@ SafeSpace is an infrastructure for mental rest in women’s shelters. By using p
 
 Note: The staff dashboard and the edge device client will run on different computers.
 
-##Advantages of using this application:
+## Advantages of using this application:
 1. Runs Python natively
 2. Built-in WiFi : connects directly to staff dashboard network
 3. Always-on audio capture, ultra low power draw
 4. Discreet form factor : mounts on any wall in any room
 
-##Limitations: 
+## Limitations: 
 1. Laptop microphones differ in sensitivity, directionality, and noise handling. Shelter environments have overlapping voices, echoes, and background noise that are not replicated.
 2. Training and testing data may not fully represent real distress signals across accents, languages, emotional intensity, or speaking styles.
    
