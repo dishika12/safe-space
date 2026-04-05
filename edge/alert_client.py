@@ -31,11 +31,14 @@ def send_alert(level: str, device_id: str = DEVICE_ID, signal_type: str = "unkno
 
 def register_device():
     try:
-        requests.post(f"{BACKEND_URL}/register", json={
+        print(f"[Alert Client] Attempting to register with {BACKEND_URL}...")
+        response = requests.post(f"{BACKEND_URL}/register", json={
             "device_id": DEVICE_ID,
             "name": "Room 1",
             "location": "East Wing",
         }, timeout=5)
-        print("[Alert Client] Registered with staff server")
+        print(f"[Alert Client] Server response: {response.status_code}")
+    except requests.exceptions.ConnectionError:
+        print(f"[Alert Client] ❌ Could not reach {BACKEND_URL} — wrong IP or server not running")
     except Exception as e:
-        print(f"[Alert Client] Registration failed: {e}")
+        print(f"[Alert Client] ❌ Error: {e}")
