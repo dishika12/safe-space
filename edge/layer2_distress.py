@@ -129,3 +129,19 @@ def trigger_layer_two(device_id: str):
 
     thread = threading.Thread(target=_run, daemon=True)
     thread.start()
+
+def continuous_monitor():
+    """
+    Continuously records and classifies audio in a loop.
+    Runs independently of the wake word.
+    """
+    print("[Layer 2] Continuous monitoring started...")
+    while True:
+        try:
+            waveform = _record_window(CONFIRMATION_WINDOW_SECONDS)
+            status, score = classify_audio(waveform)
+            if status in ("confirmed", "possible"):
+                from config import DEVICE_ID
+                send_alert(level=status, device_id=DEVICE_ID)
+        except Exception as e:
+            print(f"[Layer 2] Error in continuous monitor: {e}")
