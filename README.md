@@ -19,6 +19,17 @@ Staff Server (Backend)
 1. Python + Flask - web server and REST API endpoints (/register, /alert, /resolve)
 2. Flask-SocketIO - real-time WebSocket push to the browser dashboard
 
+Setup Instructions:
+1. Clone the repository.
+2. Run the staff dashboard:
+cd staff
+pip install -r requirements.txt
+python app.py
+3. Run the edge device client:
+cd edge
+pip install -r requirements.txt
+python main.py
+
 
 Limitations: 
 1. Laptop microphones differ in sensitivity, directionality, and noise handling. Shelter environments have overlapping voices, echoes, and background noise that are not replicated.
