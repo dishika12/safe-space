@@ -1,0 +1,6 @@
+openwakeword
+sounddevice
+numpy
+tensorflow_hub
+tensorflow
+librosa

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}— Resources{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Support Resources</h1>
+    <p class="page-sub">Emergency contacts and services available to residents</p>
+  </div>
+</div>
+
+<div class="resources-grid">
+  {% for r in resources %}
+  <div class="resource-card">
+    <div class="resource-type-badge {{ r.type | lower }}">{{ r.type }}</div>
+    <h3 class="resource-name">{{ r.name }}</h3>
+    <p class="resource-description">{{ r.description }}</p>
+    <div class="resource-contact">
+      {% if r.type == "Website" %}
+        <a href="https://{{ r.contact }}" target="_blank" class="resource-link">{{ r.contact }} ↗</a>
+      {% else %}
+        <span class="resource-phone">{{ r.contact }}</span>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

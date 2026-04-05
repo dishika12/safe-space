@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Safe Space {% block title %}{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  {% if session.get('username') %}
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🛡</span>
+      <span class="brand-text">Safe Space</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+        <span class="nav-icon">⬡</span> Dashboard
+      </a></li>
+      <li><a href="{{ url_for('resources') }}" class="nav-link {% if request.endpoint == 'resources' %}active{% endif %}">
+        <span class="nav-icon">◈</span> Resources
+      </a></li>
+      <li><a href="{{ url_for('history') }}" class="nav-link {% if request.endpoint == 'history' %}active{% endif %}">
+        <span class="nav-icon">◷</span> History
+      </a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <span class="staff-name">{{ session.username }}</span>
+      <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>
+  </nav>
+  {% endif %}
+
+  <main class="main-content {% if not session.get('username') %}full-width{% endif %}">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

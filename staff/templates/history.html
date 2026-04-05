@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}— History{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Alert History</h1>
+    <p class="page-sub">All incidents, most recent first</p>
+  </div>
+</div>
+
+<div class="history-table-wrap">
+  {% if history %}
+  <table class="history-table">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Sensor</th>
+        <th>Location</th>
+        <th>Signal</th>
+        <th>Level</th>
+        <th>Status</th>
+        <th>Resolved By</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in history %}
+      <tr class="history-row {{ 'resolved' if entry.resolved else entry.level }}">
+        <td class="mono">{{ entry.timestamp }}</td>
+        <td>{{ entry.sensor_name }}</td>
+        <td>{{ entry.location }}</td>
+        <td>{{ entry.signal_type }}</td>
+        <td><span class="level-badge {{ entry.level }}">{{ entry.level }}</span></td>
+        <td>
+          {% if entry.resolved %}
+            <span class="resolved-badge">✓ Resolved</span>
+          {% else %}
+            <span class="active-badge">Active</span>
+          {% endif %}
+        </td>
+        <td class="mono small">
+          {% if entry.resolved %}
+            {{ entry.resolved_by }} @ {{ entry.resolved_at }}
+          {% else %}
+            —
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <p>No alerts recorded yet.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

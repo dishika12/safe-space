@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}— Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Sensor Dashboard</h1>
+    <p class="page-sub">Live monitoring — all shelter zones</p>
+  </div>
+  <div class="status-legend">
+    <span class="legend-item safe">● Safe</span>
+    <span class="legend-item possible">● Possible</span>
+    <span class="legend-item confirmed">● Confirmed</span>
+  </div>
+</div>
+
+<div class="sensor-grid" id="sensor-grid">
+  {% for device_id, sensor in sensors.items() %}
+  <div class="sensor-card {{ sensor.status }}" id="card-{{ device_id }}" data-device="{{ device_id }}">
+    <div class="sensor-pulse" id="pulse-{{ device_id }}"></div>
+    <div class="sensor-header">
+      <span class="sensor-name">{{ sensor.name }}</span>
+      <span class="sensor-status-badge" id="badge-{{ device_id }}">{{ sensor.status|upper }}</span>
+    </div>
+    <div class="sensor-location">{{ sensor.location }}</div>
+    <div class="sensor-alert-type" id="type-{{ device_id }}">
+      {% if sensor.alert_type %}{{ sensor.alert_type }}{% else %}No activity{% endif %}
+    </div>
+    <button class="resolve-btn" id="btn-{{ device_id }}"
+      onclick="resolveAlert('{{ device_id }}', '{{ sensor.alert_id }}')"
+      style="display: {% if sensor.status != 'safe' %}flex{% else %}none{% endif %}">
+      ✓ Mark Resolved
+    </button>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Device IDs from server for JS to reference
+  const SENSORS = {{ sensors | tojson }};
+</script>
+{% endblock %}
