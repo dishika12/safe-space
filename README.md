@@ -43,7 +43,7 @@ Note: The staff dashboard and the edge device client will run on different compu
 2. Training and testing data may not fully represent real distress signals across accents, languages, emotional intensity, or speaking styles.
    
 
-##Next Steps:
+## Next Steps:
 For real-world shelter deployment, we plan to replace the laptop-based setup with a Raspberry Pi Zero 2 W + INMP441 MEMS Microphone (~$25–35 CAD per unit). This standalone sensor runs Python natively, connects over WiFi, and mounts discreetly on any wall. When a distress sound is detected, the alert flows directly from the sensor to the staff dashboard over the same network.
 
 
