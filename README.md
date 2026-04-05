@@ -22,13 +22,13 @@ Staff Server (Backend)
 Setup Instructions:
 1. Clone the repository.
 2. Run the staff dashboard:
-cd staff
-pip install -r requirements.txt
-python app.py
+`cd staff`
+`pip install -r requirements.txt`
+`python app.py`
 3. Run the edge device client:
-cd edge
-pip install -r requirements.txt
-python main.py
+`cd edge`
+`pip install -r requirements.txt`
+`python main.py`
 
 
 Limitations: 
