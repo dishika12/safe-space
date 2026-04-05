@@ -1,4 +1,6 @@
 openwakeword
 sounddevice
 numpy
-requests
+tensorflow_hub
+tensorflow
+librosa
