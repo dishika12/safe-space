@@ -1,107 +1,131 @@
-#def trigger_layer_two(device_id: str):
- #   # Stub — replace when Layer 2 is implemented
-  #  print(f"[Layer 2 Stub] Would classify audio for device={device_id}")
+# edge/layer2_distress.py
 
-
-
-import tensorflow as tf
-import tensorflow_hub as hub
 import numpy as np
-import librosa
-import matplotlib.pyplot as plt
 import sounddevice as sd
-from scipy.io.wavfile import write
-import datetime
-import time
-import os
+import tensorflow_hub as hub
+import librosa
+import threading
+from alert_client import send_alert
+from config import CONFIRMATION_WINDOW_SECONDS
 
-# 1. Load the YAMNet model (Cache it locally to avoid redownloading every time)
-print("Loading YAMNet Model...")
-model = hub.load('https://tfhub.dev/google/yamnet/1')
+_model = None
+_model_lock = threading.Lock()
 
-# 2. Extract Class Names
-class_map_path = model.class_map_path().numpy()
-with tf.io.gfile.GFile(class_map_path) as f:
-    class_names = [line.split(',')[1] for line in f.read().splitlines()[1:]]
+def _get_model():
+    global _model
+    if _model is None:
+        with _model_lock:
+            if _model is None:  # double-check after acquiring lock
+                print("[Layer 2] Loading YAMNet model (first trigger)...")
+                _model = hub.load('https://tfhub.dev/google/yamnet/1')
+                print("[Layer 2] YAMNet ready.")
+    return _model
 
-# Configuration
 SAFETY_INDICES = {
-    10: "Yell", 11: "Shouting", 12: "Screaming",
-    14: "Crying", 437: "Crash", 441: "Glass", 442: "Shatter",
-    434: "Thump", 435: "Bang", 436: "Slap", 438: "Smash"
+    10: "Yell",
+    11: "Shouting",
+    12: "Screaming",
+    14: "Crying",
+    437: "Crash",
+    441: "Glass",
+    442: "Shatter"
 }
 
-def record_audio_local(seconds=4, filename='current_segment.wav', fs=16000):
-    """Replaces the Colab JS recorder with local system microphone access."""
-    print(f"[*] Recording ({seconds}s)...", end="\r")
-    # Record as float32 to match YAMNet expectations
-    recording = sd.rec(int(seconds * fs), samplerate=fs, channels=1, dtype='float32')
-    sd.wait()  # Wait until recording is finished
-    write(filename, fs, recording)  # Save as wav file
+_running = False
+_running_lock = threading.Lock()
+
+
+def classify_audio(waveform: np.ndarray) -> tuple[str, float]:
+    """
+    Takes a float32 waveform.
+    Returns (status, highest_danger_score).
+    status is one of: "confirmed", "possible", "safe"
+    """
+    if np.max(np.abs(waveform)) > 0:
+        waveform = waveform / np.max(np.abs(waveform))
+
+    model = _get_model()
+    scores, _, _ = model(waveform)
+
+    peak_scores = np.max(scores, axis=0)
+
+    safety_score = max([peak_scores[i] for i in SAFETY_INDICES.keys()])
+
+    print("\n[Layer 2] --- Distress Analysis ---")
+    detected_any = False
+    for idx, name in SAFETY_INDICES.items():
+        score = peak_scores[idx]
+        if score > 0.10:
+            indicator = "🔴" if score > 0.30 else "🟡"
+            print(f"  {indicator} {name}: {int(score * 100)}% certainty")
+            detected_any = True
+
+    if not detected_any:
+        print("  No distress sounds detected above threshold.")
+
+    if safety_score > 0.15:
+        status = "confirmed"
+        print(f"[Layer 2] 🔴 RED ALERT ({int(safety_score * 100)}% certainty)")
+    elif safety_score > 0.10:
+        status = "possible"
+        print(f"[Layer 2] 🟡 YELLOW WARNING ({int(safety_score * 100)}% certainty)")
+    else:
+        status = "safe"
+        safety_conf = int((1.0 - safety_score) * 100)
+        print(f"[Layer 2] 🟢 Normal activity ({safety_conf}% confidence)")
+
+    print("[Layer 2] ----------------------------\n")
+    return status, float(safety_score)
+
+
+def _record_window(duration_seconds: int) -> np.ndarray:
+    """
+    Records from microphone for a fixed window.
+    Returns a float32 waveform at 16kHz.
+    """
+    print(f"[Layer 2] Recording {duration_seconds}s confirmation window...")
+    recording = sd.rec(
+        int(duration_seconds * 16000),
+        samplerate=16000,
+        channels=1,
+        dtype='float32'
+    )
+    sd.wait()
     return recording.flatten()
 
-def check_explosive_conflict(waveform, scores_matrix):
-    """Detects conflict via classification scores AND sudden energy bursts."""
-    shout_indices = [10, 11, 12]
-    impact_indices = [434, 435, 436, 437, 438, 441, 442]
 
-    # Energy-based check
-    energy = np.array([np.sum(waveform[i:i+2048]**2) for i in range(0, len(waveform), 2048)])
-    if len(energy) > 1:
-        energy_delta = np.max(np.diff(energy))
-        avg_energy = np.mean(energy)
-        is_vocal_spike = energy_delta > (avg_energy * 8.0) and avg_energy > 0.0015
-        is_heavy_burst = energy_delta > (avg_energy * 25.0) and avg_energy > 0.005
-    else:
-        is_vocal_spike = is_heavy_burst = False
+def trigger_layer_two(device_id: str):
+    """
+    Called by layer1_keyword.py after wake word is detected.
+    Runs in a background thread so Layer 1 keeps listening.
+    Ignores the call if a Layer 2 session is already running.
+    """
+    global _running
 
-    for i in range(scores_matrix.shape[0]):
-        max_shout = np.max([scores_matrix[i, j] for j in shout_indices])
-        max_impact = np.max([scores_matrix[i, j] for j in impact_indices])
+    with _running_lock:
+        if _running:
+            print("[Layer 2] Already running — ignoring duplicate trigger.")
+            return
+        _running = True
 
-        if max_shout > 0.35 or (is_vocal_spike and max_shout > 0.10):
-            return True, "Explosive Vocal/Scolding", max(max_shout, 0.5 if is_vocal_spike else 0)
+    def _run():
+        global _running
+        try:
+            waveform = _record_window(CONFIRMATION_WINDOW_SECONDS)
+            status, score = classify_audio(waveform)
 
-        if max_impact > 0.65 or (is_heavy_burst and max_impact > 0.35):
-            return True, "Sudden Physical Impact", max(max_impact, 0.7 if is_heavy_burst else 0)
-
-    return False, None, 0
-
-def run_watchdog():
-    print("\n" + "="*40)
-    print("🛡️  WATCHDOG ACTIVE: LOCAL MONITORING MODE")
-    print("Press Ctrl+C to stop.")
-    print("="*40 + "\n")
-
-    live_incidents = []
-
-    try:
-        while True:
-            # 1. Capture local audio
-            y_norm = record_audio_local(seconds=4)
-
-            # 2. Run YAMNet Inference
-            # YAMNet expects waveform in [-1.0, 1.0]
-            scores, embeddings, spectrogram = model(y_norm)
-            scores_np = scores.numpy()
-
-            # 3. Analyze for danger
-            is_danger, sound_type, intensity = check_explosive_conflict(y_norm, scores_np)
-
-            if is_danger:
-                timestamp = datetime.datetime.now().strftime('%H:%M:%S')
-                print(f"\a") # System beep for alert
-                print(f"🛑 ALERT [{timestamp}]: {sound_type} detected!")
-                print(f"   Intensity: {int(intensity*100)}%")
-                live_incidents.append({'Time': timestamp, 'Type': sound_type})
+            if status in ("confirmed", "possible"):
+                send_alert(level="confirmed", device_id=device_id)
             else:
-                # Optional: Visual heartbeat to show it's still running
-                print(f"Listening... (Safe)            ", end="\r")
+                print("[Layer 2] No distress confirmed. No additional alert sent.")
 
-    except KeyboardInterrupt:
-        print("\n\n🛑 Watchdog deactivated.")
-        if live_incidents:
-            print(f"Summary: {len(live_incidents)} incidents logged.")
+        except Exception as e:
+            print(f"[Layer 2] Error during classification: {e}")
 
-if __name__ == "__main__":
-    run_watchdog()
+        finally:
+            with _running_lock:
+                _running = False
+            print("[Layer 2] Session complete. Listening resumed.")
+
+    thread = threading.Thread(target=_run, daemon=True)
+    thread.start()
