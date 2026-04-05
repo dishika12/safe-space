@@ -1,6 +1,6 @@
 DEVICE_ID = "shelter-room-1"
 SAFETY_WORD = "hey_jarvis"
-BACKEND_URL = "http://localhost:8000"
+BACKEND_URL = "http://206.87.193.123"
 SAMPLE_RATE = 16000
 CONFIRMATION_WINDOW_SECONDS = 30
 LOCAL_INFERENCE = True
