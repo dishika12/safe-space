@@ -18,3 +18,8 @@ Tech Stack Used :
 Staff Server (Backend)
 1. Python + Flask - web server and REST API endpoints (/register, /alert, /resolve)
 2. Flask-SocketIO - real-time WebSocket push to the browser dashboard
+
+
+Limitations: 
+1. Laptop microphones differ in sensitivity, directionality, and noise handling. Shelter environments have overlapping voices, echoes, and background noise that are not replicated.
+2. Training and testing data may not fully represent real distress signals across accents, languages, emotional intensity, or speaking styles.
