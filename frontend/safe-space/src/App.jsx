@@ -25,5 +25,5 @@ export default function App() {
     }
   };
 
-  return <div className="app-shell">{renderPage()}</div>;
+  return <div className="app-root">{renderPage()}</div>;
 }

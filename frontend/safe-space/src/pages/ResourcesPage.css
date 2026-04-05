@@ -1,49 +1,120 @@
-.filter-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 22px;
-}
-
-.filter-row button {
-  border: 1px solid #cbd5e1;
-  background: #f8fafc;
-  padding: 10px 14px;
-  border-radius: 999px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.filter-row button:hover {
-  background: #e2e8f0;
-}
-
-.resource-library {
+.resource-page-wrap {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 290px 1fr;
+  min-height: 100vh;
+  background: #f4f2f8;
+}
+
+.resource-sidebar {
+  background: #171418;
+  color: white;
+  padding: 28px 22px;
+}
+
+.resource-brand {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 36px;
+}
+
+.resource-brand h2 {
+  font-size: 34px;
+}
+
+.resource-brand p {
+  color: #c8bdd7;
+}
+
+.resource-nav {
+  display: flex;
+  flex-direction: column;
   gap: 14px;
 }
 
-.resource-item {
+.resource-nav button {
+  background: transparent;
+  border: none;
+  color: white;
+  text-align: left;
+  font-size: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.resource-nav button:hover,
+.resource-nav button.active {
+  background: #2a2231;
+  color: #d9a8ff;
+}
+
+.resource-main {
+  padding: 32px;
+}
+
+.resource-header h1 {
+  font-size: 46px;
+  color: #9f69d7;
+  margin-bottom: 20px;
+}
+
+.resource-filters {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.resource-filters button {
+  border: none;
+  background: white;
+  padding: 12px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  border: 1px solid #d9d1e3;
+  font-weight: 600;
+}
+
+.resource-list-card {
+  background: white;
+  border: 2px solid #d9d1e3;
+  border-radius: 28px;
+  padding: 24px;
+  display: grid;
+  gap: 16px;
+}
+
+.resource-row-card {
+  background: #f8f5fb;
+  border-radius: 20px;
+  padding: 18px;
   display: flex;
   gap: 16px;
   align-items: flex-start;
-  background: #f8fafc;
-  border-radius: 16px;
-  padding: 18px;
-  border: 1px solid #e2e8f0;
 }
 
-.resource-icon {
-  font-size: 28px;
-  min-width: 36px;
+.resource-icon-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #c58ef4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
 }
 
-.resource-item h3 {
+.resource-row-card h3 {
   margin-bottom: 6px;
-  color: #0f172a;
 }
 
-.resource-item p {
-  color: #64748b;
+.resource-row-card p {
+  color: #6e6779;
+}
+
+@media (max-width: 900px) {
+  .resource-page-wrap {
+    grid-template-columns: 1fr;
+  }
 }

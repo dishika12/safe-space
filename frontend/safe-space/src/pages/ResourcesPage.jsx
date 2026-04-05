@@ -3,84 +3,59 @@ import "./ResourcesPage.css";
 
 export default function ResourcesPage({ setCurrentPage }) {
   const resources = [
-    {
-      icon: "📞",
-      title: "BC Crisis Line",
-      desc: "1-800-784-2433 · Available 24/7",
-    },
-    {
-      icon: "📋",
-      title: "De-escalation Protocol",
-      desc: "Step-by-step guide for staff response",
-    },
-    {
-      icon: "💬",
-      title: "Crisis Text Line",
-      desc: "Text HOME to 741741",
-    },
-    {
-      icon: "🏥",
-      title: "BC Mental Health Services",
-      desc: "burnaby-hospital.ca",
-    },
-    {
-      icon: "📖",
-      title: "CWI Intake Process",
-      desc: "Internal shelter document",
-    },
+    { title: "BC Crisis Line", detail: "1-800-784-2433 · Available 24/7" },
+    { title: "De-escalation Protocol", detail: "Step-by-step guide for staff" },
+    { title: "Crisis Text Line", detail: "Text HOME to 741741" },
+    { title: "Medical Contact", detail: "Emergency and urgent support contacts" },
+    { title: "Internal Shelter Intake Process", detail: "Staff-only procedural guide" },
   ];
 
   return (
-    <div className="page-layout">
-      <div className="topbar">
-        <div className="brand">🛡️ SafeSpace</div>
-
-        <div className="topbar-right">
-          <div className="nav-links">
-            <button className="nav-link-btn" onClick={() => setCurrentPage("dashboard")}>
-              Home
-            </button>
-            <button className="nav-link-btn" onClick={() => setCurrentPage("map")}>
-              Device Map
-            </button>
-            <button className="nav-link-btn" onClick={() => setCurrentPage("resources")}>
-              Resources
-            </button>
-            <button className="nav-link-btn" onClick={() => setCurrentPage("history")}>
-              History
-            </button>
+    <div className="resource-page-wrap">
+      <aside className="resource-sidebar">
+        <div className="resource-brand">
+          <div className="sidebar-logo">🛡️</div>
+          <div>
+            <h2>SafeSpace</h2>
+            <p>Staff Dashboard</p>
           </div>
-          <button className="topbar-btn" onClick={() => setCurrentPage("login")}>
-            Logout
-          </button>
         </div>
-      </div>
 
-      <div className="content-wrap">
-        <div className="card">
-          <h2 className="section-title">Resources & Protocols</h2>
+        <div className="resource-nav">
+          <button onClick={() => setCurrentPage("dashboard")}>Dashboard</button>
+          <button onClick={() => setCurrentPage("map")}>Device Map</button>
+          <button className="active" onClick={() => setCurrentPage("resources")}>
+            Resources
+          </button>
+          <button onClick={() => setCurrentPage("history")}>History & Insights</button>
+          <button onClick={() => setCurrentPage("login")}>Logout</button>
+        </div>
+      </aside>
 
-          <div className="filter-row">
+      <main className="resource-main">
+        <div className="resource-header">
+          <h1>Resources & Protocols</h1>
+          <div className="resource-filters">
             <button>All</button>
             <button>Crisis</button>
             <button>Medical</button>
             <button>De-escalation</button>
             <button>CWI</button>
           </div>
-
-          <div className="resource-library">
-            {resources.map((resource, index) => (
-              <div key={index} className="resource-item">
-                <div className="resource-icon">{resource.icon}</div>
-                <div>
-                  <h3>{resource.title}</h3>
-                  <p>{resource.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
-      </div>
+
+        <div className="resource-list-card">
+          {resources.map((item, index) => (
+            <div className="resource-row-card" key={index}>
+              <div className="resource-icon-badge">📘</div>
+              <div>
+                <h3>{item.title}</h3>
+                <p>{item.detail}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
     </div>
   );
 }

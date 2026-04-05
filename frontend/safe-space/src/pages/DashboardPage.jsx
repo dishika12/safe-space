@@ -2,126 +2,160 @@ import React from "react";
 import "./DashboardPage.css";
 
 export default function DashboardPage({ setCurrentPage }) {
-  const devices = [
-    { id: "Pi 01", location: "Entrance", status: "online", ping: "just now" },
-    { id: "Pi 02", location: "Hallway", status: "online", ping: "just now" },
-    { id: "Pi 03", location: "Common Room", status: "alert", ping: "ALERT ACTIVE" },
-    { id: "Pi 04", location: "Dining Area", status: "online", ping: "just now" },
-  ];
-
   const logs = [
     { time: "4:32 PM", room: "Common Room", type: "Crying", status: "Resolved" },
     { time: "2:15 PM", room: "Hallway", type: "Screaming", status: "Resolved" },
     { time: "11:03 AM", room: "Entrance", type: "Crying", status: "Resolved" },
   ];
 
+  const deviceStatus = [
+    { id: "Pi 01", room: "Entrance", status: "Online" },
+    { id: "Pi 02", room: "Hallway", status: "Online" },
+    { id: "Pi 03", room: "Common Room", status: "Alert Active" },
+    { id: "Pi 04", room: "Dining Area", status: "Online" },
+  ];
+
   return (
-    <div className="page-layout">
-      <div className="topbar">
-        <div className="brand">🛡️ SafeSpace</div>
-
-        <div className="topbar-right">
-          <div className="nav-links">
-            <button className="nav-link-btn" onClick={() => setCurrentPage("dashboard")}>
-              Home
-            </button>
-            <button className="nav-link-btn" onClick={() => setCurrentPage("map")}>
-              Device Map
-            </button>
-            <button className="nav-link-btn" onClick={() => setCurrentPage("resources")}>
-              Resources
-            </button>
-            <button className="nav-link-btn" onClick={() => setCurrentPage("history")}>
-              History
-            </button>
+    <div className="dashboard-layout">
+      <aside className="sidebar">
+        <div className="sidebar-brand">
+          <div className="sidebar-logo">🛡️</div>
+          <div>
+            <h2>SafeSpace</h2>
+            <p>Staff Dashboard</p>
           </div>
+        </div>
 
-          <span>Staff: Jane D.</span>
-          <button className="topbar-btn" onClick={() => setCurrentPage("login")}>
+        <nav className="sidebar-nav">
+          <button className="sidebar-link active" onClick={() => setCurrentPage("dashboard")}>
+            Dashboard
+          </button>
+          <button className="sidebar-link" onClick={() => setCurrentPage("map")}>
+            Device Map
+          </button>
+          <button className="sidebar-link" onClick={() => setCurrentPage("resources")}>
+            Resources
+          </button>
+          <button className="sidebar-link" onClick={() => setCurrentPage("history")}>
+            History & Insights
+          </button>
+          <button className="sidebar-link" onClick={() => setCurrentPage("login")}>
             Logout
           </button>
+        </nav>
+
+        <div className="sidebar-footer">
+          <button className="sidebar-link">Account</button>
+          <button className="sidebar-link">Help</button>
         </div>
-      </div>
+      </aside>
 
-      <div className="content-wrap">
-        <div className="dashboard-stats">
-          <div className="stat-card alert-stat">
-            <h3>🔴 1 ACTIVE ALERT</h3>
-            <p>Immediate action needed</p>
-          </div>
-          <div className="stat-card online-stat">
-            <h3>🟢 3 DEVICES ONLINE</h3>
-            <p>All other systems normal</p>
-          </div>
-        </div>
-
-        <div className="dashboard-grid">
-          <div className="card dashboard-card">
-            <h2 className="section-title">ACTIVE ALERTS</h2>
-
-            <div className="active-alert-box">
-              <div className="alert-header-line">
-                <h3>🔴 Common Room — Pi 03</h3>
-                <span className="alert-badge">Live</span>
-              </div>
-
-              <p className="alert-main-text">Crying, sobbing · 82% confidence</p>
-              <p className="muted">4:32 PM · 2 mins ago</p>
-
-              <div className="resources-block">
-                <h4>QUICK RESOURCES</h4>
-                <div className="resource-buttons">
-                  <button>📞 BC Crisis Line</button>
-                  <button>📋 De-escalation Guide</button>
-                  <button>💬 Text Support</button>
-                  <button>🏥 Medical Contact</button>
-                </div>
-              </div>
-
-              <div className="alert-actions">
-                <button className="ack-btn">Acknowledge</button>
-                <button className="resolve-btn">Mark Resolved</button>
-              </div>
+      <main className="dashboard-main">
+        <header className="dashboard-topbar">
+          <div className="topbar-left">
+            <div className="profile-avatar">JD</div>
+            <div>
+              <h3>Jane Doe</h3>
+              <p>Administrator</p>
             </div>
           </div>
 
-          <div className="card dashboard-card">
-            <h2 className="section-title">DEVICE STATUS</h2>
-            <div className="device-status-list">
-              {devices.map((device, index) => (
-                <div
-                  key={index}
-                  className={`device-row ${device.status === "alert" ? "device-alert" : ""}`}
-                >
+          <div className="topbar-right">
+            <div className="search-box">
+              <span>🔎</span>
+              <input type="text" placeholder="Search here..." />
+            </div>
+          </div>
+        </header>
+
+        <section className="dashboard-header-row">
+          <h1>Dashboard</h1>
+          <button className="view-details-btn">View Details</button>
+        </section>
+
+        {/* <section className="overview-card large-card">
+          <div className="section-row">
+            <h2>Alert Overview</h2>
+            <span className="muted-tag">Today</span>
+          </div>
+
+          <div className="overview-chart-mock">
+            <div className="chart-line purple-line"></div>
+            <div className="chart-line orange-line"></div>
+            <div className="chart-line dark-line"></div>
+          </div>
+        </section> */}
+
+        <section className="bottom-grid">
+          <div className="info-card purple-card">
+            <h3>Active Alerts</h3>
+            <div className="big-number">1</div>
+            <p>Common Room · Pi 03</p>
+            <span>Crying, sobbing · 82% confidence</span>
+          </div>
+
+          <div className="info-card dark-card">
+            <div className="section-row">
+              <h3>Device Status</h3>
+              <span>Live</span>
+            </div>
+
+            <div className="device-list">
+              {deviceStatus.map((device, index) => (
+                <div key={index} className="device-item">
                   <div>
-                    <span className="device-dot">
-                      {device.status === "alert" ? "🔴" : "🟢"}
-                    </span>{" "}
-                    {device.id} · {device.location}
+                    <strong>{device.id}</strong>
+                    <p>{device.room}</p>
                   </div>
-                  <div className="muted">
-                    {device.status === "alert" ? device.ping : `Last ping: ${device.ping}`}
-                  </div>
+                  <span
+                    className={
+                      device.status === "Alert Active"
+                        ? "status-pill red"
+                        : "status-pill green"
+                    }
+                  >
+                    {device.status}
+                  </span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="card dashboard-card full-width">
-            <h2 className="section-title">TODAY'S LOG</h2>
-            <div className="log-list">
-              {logs.map((log, index) => (
-                <div key={index} className="log-row">
-                  <span>{log.time}</span>
-                  <span>{log.room}</span>
-                  <span>{log.type}</span>
-                  <span>{log.status}</span>
-                </div>
-              ))}
+          <div className="info-card orange-card">
+            <div className="section-row">
+              <h3>Quick Resources</h3>
+              <span>Now</span>
             </div>
+
+            <div className="resource-mini-box">
+              <p>📞 BC Crisis Line</p>
+              <p>📋 De-escalation Guide</p>
+              <p>💬 Text Support</p>
+              <p>🏥 Medical Contact</p>
+            </div>
+
+            <button className="action-line">Open Response Resources ➜</button>
           </div>
-        </div>
-      </div>
+        </section>
+
+        <section className="logs-card">
+          <div className="section-row">
+            <h2>Today's Log</h2>
+            <span className="muted-tag">Recent activity</span>
+          </div>
+
+          <div className="logs-table">
+            {logs.map((log, index) => (
+              <div className="log-row" key={index}>
+                <span>{log.time}</span>
+                <span>{log.room}</span>
+                <span>{log.type}</span>
+                <span>{log.status}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
     </div>
   );
 }

@@ -2,29 +2,36 @@ import React from "react";
 import "./LoginPage.css";
 
 export default function LoginPage({ setCurrentPage }) {
-  const handleLogin = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setCurrentPage("dashboard");
   };
 
   return (
     <div className="login-page">
-      <div className="login-card">
-        <div className="login-logo">🛡️</div>
-        <h1 className="login-title">SafeSpace</h1>
-        <p className="login-subtitle">Staff Access Portal</p>
+      <div className="login-panel">
+        <div className="login-brand">
+          <div className="login-logo">🛡️</div>
+          <div>
+            <h1>SafeSpace</h1>
+            <p>Shelter Staff Dashboard</p>
+          </div>
+        </div>
 
-        <form className="login-form" onSubmit={handleLogin}>
-          <input type="text" placeholder="Username" className="login-input" />
-          <input type="password" placeholder="Password" className="login-input" />
-          <button type="submit" className="login-btn">
-            Sign In
-          </button>
-        </form>
+        <div className="login-box">
+          <h2>Staff Access Portal</h2>
+          <p>Secure login for authorized shelter staff only.</p>
 
-        <p className="login-footer">
-          Secure · Private · For Authorized Staff Only
-        </p>
+          <form onSubmit={handleSubmit} className="login-form">
+            <input type="text" placeholder="Username" />
+            <input type="password" placeholder="Password" />
+            <button type="submit">Sign In</button>
+          </form>
+
+          <span className="login-note">
+            Safety · Privacy · Real-time Shelter Support
+          </span>
+        </div>
       </div>
     </div>
   );

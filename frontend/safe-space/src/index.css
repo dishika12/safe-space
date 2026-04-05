@@ -1,4 +1,20 @@
-body {
+* {
   margin: 0;
-  font-family: Arial, sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  width: 100%;
+  font-family: "Inter", Arial, sans-serif;
+  background: #f4f2f8;
+  color: #1d1b23;
+}
+
+button,
+input {
+  font: inherit;
 }
